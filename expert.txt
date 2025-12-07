@@ -1,0 +1,78 @@
+% -----------------------------------------
+% Student Performance Expert System
+% -----------------------------------------
+
+start :-
+    nl, write('====== STUDENT PERFORMANCE EXPERT SYSTEM ======'), nl,
+    evaluate(Performance),
+    nl, write('Final Evaluation: The student performance is '),
+    write(Performance), nl, !.
+
+start :-
+    write('Unable to evaluate performance.'), nl.
+
+
+% ----------------------------
+% Main Evaluation Rules
+% ----------------------------
+
+evaluate(good) :-
+    positive(attendance),
+    positive(assignments),
+    positive(study_hours),
+    positive(high_marks).
+
+evaluate(average) :-
+    positive(attendance),
+    positive(assignments),
+    negative(high_marks).
+
+evaluate(poor) :-
+    negative(attendance),
+    negative(assignments),
+    negative(study_hours).
+
+
+% ----------------------------
+% Asking Questions
+% ----------------------------
+
+positive(attendance) :-
+    ask('Has the student maintained above 75% attendance?').
+
+positive(assignments) :-
+    ask('Does the student regularly submit assignments?').
+
+positive(study_hours) :-
+    ask('Does the student study for more than 2 hours daily?').
+
+positive(high_marks) :-
+    ask('Does the student score above 70% in exams?').
+
+
+negative(attendance) :-
+    ask_no('Is the attendance below 50%?').
+
+negative(assignments) :-
+    ask_no('Does the student rarely submit assignments?').
+
+negative(study_hours) :-
+    ask_no('Does the student study less than 1 hour daily?').
+
+negative(high_marks) :-
+    ask_no('Does the student score below 50% in exams?').
+
+
+% ----------------------------
+% Input Handling
+% ----------------------------
+
+ask(Question) :-
+    write(Question), write(' (yes/no): '),
+    read(Reply),
+    Reply == yes.
+
+ask_no(Question) :-
+    write(Question), write(' (yes/no): '),
+    read(Reply),
+    Reply == yes.

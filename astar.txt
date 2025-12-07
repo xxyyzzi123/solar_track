@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct { int x, y, px, py; } N;
+
+int eq(N a, N b){ return a.x==b.x && a.y==b.y; }
+
+int h(N a, N b){ return abs(a.x-b.x)+abs(a.y-b.y); }
+
+int nei(N p, N *out){
+    out[0]=(N){p.x+1,p.y,p.x,p.y};
+    out[1]=(N){p.x-1,p.y,p.x,p.y};
+    out[2]=(N){p.x,p.y+1,p.x,p.y};
+    out[3]=(N){p.x,p.y-1,p.x,p.y};
+    return 4;
+}
+
+int grid[10][10] = {
+    {1,1,1,1,1,1,1,1,1,1},
+    {1,0,1,0,1,1,0,1,0,1},
+    {1,1,1,1,0,1,1,1,1,1},
+    {0,1,0,1,1,1,0,1,0,1},
+    {1,1,1,0,1,1,1,0,1,1},
+    {1,0,1,1,1,0,1,1,1,1},
+    {1,1,1,0,1,1,1,0,1,1},
+    {1,0,1,1,0,1,1,1,0,1},
+    {1,1,1,1,1,1,0,1,1,1},
+    {1,1,0,1,1,1,1,1,1,1}
+};
+
+int a_star(N s,N g){
+    N open[200];
+    int gval[200], used=1;
+    int visited[10][10]={0};
+    open[0]=s;
+    gval[0]=0;
+
+    while(used){
+        int best=0;
+        for(int i=1;i<used;i++)
+            if(gval[i]+h(open[i],g)<gval[best]+h(open[best],g))
+                best=i;
+
+        N cur=open[best];
+        int cg=gval[best];
+        open[best]=open[--used];
+
+        if(cur.x<0 || cur.x>=10 || cur.y<0 || cur.y>=10) continue;
+        if(grid[cur.x][cur.y]==0 || visited[cur.x][cur.y]) continue;
+        visited[cur.x][cur.y]=1;
+
+        if(eq(cur,g)){
+            printf("Path reached! Cost = %d\n", cg);
+            while(!(cur.x==cur.px && cur.y==cur.py)){
+                printf("(%d,%d) <- ", cur.x, cur.y);
+                int px=cur.px, py=cur.py;
+                cur.x=px; cur.y=py;
+            }
+            printf("(%d,%d)\n", cur.x, cur.y);
+            return cg;
+        }
+
+        N nb[4];
+        int c=nei(cur,nb);
+        for(int i=0;i<c;i++){
+            open[used]=nb[i];
+            gval[used]=cg+1;
+            used++;
+        }
+    }
+
+    printf("No path found!\n");
+    return -1;
+}
+
+int main(){
+    N s={0,0,0,0};
+    N g={9,9,9,9};
+    a_star(s,g);
+    return 0;
+}

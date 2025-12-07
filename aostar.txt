@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+#define INF 9999
+
+int cost[] = {0, 3, 2, 4};
+
+int graph[4][3] = {
+    {-1, 1, -1},
+    {-1, -1, -1},
+    {-2, 2, 3},
+    {-1, -1, -1}
+};
+
+int AOStar(int node)
+{
+    int type = graph[node][0];
+
+    if (type == -1 && graph[node][1] == -1)
+        return cost[node];
+
+    if (type == -1) {
+        int child = graph[node][1];
+        int val = AOStar(child);
+        return cost[node] + val;
+    }
+
+    if (type == -2) {
+        int c1 = graph[node][1];
+        int c2 = graph[node][2];
+        int val = AOStar(c1) + AOStar(c2);
+        return cost[node] + val;
+    }
+
+    return INF;
+}
+
+int main()
+{
+    int result = AOStar(0);
+    printf("\nMinimum Solution Cost = %d\n", result);
+    return 0;
+}

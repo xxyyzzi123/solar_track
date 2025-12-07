@@ -1,0 +1,48 @@
+%Parents rules
+parent(ram,laxaman).
+parent(ram,meera).
+parent(seeta,laxaman).
+parent(seeta,meera).
+
+parent(laxaman,rohan).
+parent(laxaman,reena).
+
+parent(krishna,ram).
+parent(radha,ram).
+
+%Gender rules
+male(ram).
+male(laxaman).
+male(rohan).
+male(krishna).
+
+female(meera).
+female(seeta).
+female(reena).
+female(radha).
+
+%facts
+father(F,C):- 
+    parent(F,C),
+    male(F).
+
+mother(M,C):-
+    parent(M,C),
+    female(M).
+
+sibling(X,Y):-
+    parent(P,X),
+    parent(P,Y),
+    dif(X,Y).
+
+brother(B,X):-
+    sibling(B,X),
+    male(B).
+
+sister(S,Y):-
+    sibling(S,Y),
+    female(S).
+
+grandparent(GP, C):-
+    parent(P,C),
+    parent(GP, P).
